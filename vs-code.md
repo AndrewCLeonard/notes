@@ -1,6 +1,6 @@
 # VS Code Lessons Learned
 
-## Basic Keyvoard Shortcuts
+## Basic Keyboard Shortcuts
 
 Some I know, some I've never used. Learning what all of them are for will help me get faster. 
 
@@ -35,3 +35,19 @@ Some I know, some I've never used. Learning what all of them are for will help m
 |                           | Start Debugging              | F5                            | F5                            |
 |                           | Step Over                    | F10                           | F10                           |
 |                           | Step Into                    | F11                           | F11                           |
+
+## `code` CLI
+| Command | Description |
+|---------|-------------|
+| `code` | Open Visual Studio Code. |
+| `code .` | Open the current directory in Visual Studio Code. |
+| `code -n` | Open a new instance of Visual Studio Code. |
+| `code -n .` | Open the current directory in a new instance of Visual Studio Code. |
+| `code file1.txt file2.txt` | Open multiple files at once in Visual Studio Code. |
+| `code -g file.txt:line[:column]` | Open a file at a specific line (and optionally column) in Visual Studio Code. |
+| `code --diff file1.txt file2.txt` | Open two files in side-by-side comparison mode in Visual Studio Code. |
+| `code --add path/to/folder` | Add a folder to the current workspace in Visual Studio Code. |
+| `code --list-extensions` | List all installed extensions in Visual Studio Code. |
+| `code --install-extension extensionName` | Install an extension by its identifier in Visual Studio Code. |
+| `code --locale=es` | Launch Visual Studio Code with a specific locale (e.g., Spanish). |
+
