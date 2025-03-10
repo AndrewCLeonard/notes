@@ -6,7 +6,7 @@ Tagging the last commit of a branch before deleting it is a great way to preserv
 
 Here's how you can tag the last commit of a branch before deleting the branch:
 
-### Tagging the Last Commit
+## Tagging the Last Commit
 
 1. First, ensure you're on the branch you intend to delete (or know the commit hash you want to tag):
 
@@ -28,7 +28,7 @@ Here's how you can tag the last commit of a branch before deleting the branch:
    git push origin tag-name
    ```
 
-### Deleting the Branch
+## Deleting the Branch
 
 After tagging, you can safely delete the branch:
 
@@ -46,7 +46,7 @@ After tagging, you can safely delete the branch:
   git push origin --delete branch-name
   ```
 
-### Benefits of Tagging Before Deletion
+## Benefits of Tagging Before Deletion
 
 - **Historical Reference**: Tags provide a fixed point in the project's history that's easy to find and refer back to, even after the branch is gone.
 - **Clean Repository**: By deleting branches that have served their purpose, you keep the repository's branch list manageable and focused on current work.
@@ -66,13 +66,13 @@ The Git team now advises users to use git switch for branch operations and git r
 
 ## Git `--amend` and Divergence Issue
 
-### Key Points
+## Key Points
 
 - **`--amend` Use**: Rewrites the last commit. If already pushed, causes divergence.
 - **Why Divergence Happens**: Remote sees amended (local) commit history as different because commit hashes change.
 - **Conflict Prevention**: Git stops fast-forward merges to prevent data loss.
 
-### Resolving Divergence
+## Resolving Divergence
 
 1. **Backup Work**: Always backup before making changes that could lose data.
 2. **Fetch Latest**: `git fetch origin` to get the latest remote changes.
@@ -89,7 +89,7 @@ The Git team now advises users to use git switch for branch operations and git r
    - Overwrites remote with local.
    - Use with caution and communicate with the team.
 
-### Best Practices
+## Best Practices
 
 - **Amend Unpushed Commits Only**: Safe for local, not for pushed commits.
 - **Communicate**: Notify team when rewriting shared branch history.
