@@ -42,38 +42,39 @@ git push -u origin main
 
 ---
 
-## 🔐 STEP 3: Protect Secrets and Environment Variables
+## 🔐 STEP 3: Protect Secrets and Sensitive Files
 
-**✅ Do this before pushing anything sensitive!**
+### 🛑 NEVER COMMIT:
+- `.env` files
+- JSON files with `spreadsheetId`, `client_id`, `api_key`, or full paths
+- Credentials of any kind
 
-1. **Create a `.gitignore` file** (in your repo root) and add:
-    ```gitignore
-    # Ignore all env files
-    *.env
+### ✅ Recommended `.gitignore` Setup
+```gitignore
+# Environments
+*.env
+.env
+env/
+venv/
+.venv/
+ENV/
 
-    # Optional: ignore the folder where you store secrets
-    env_files/
-    ```
+# VS Code
+.vscode/
 
-2. **Move your `.env` files into a subfolder** like `env_files/` to stay organized:
-    ```
-    notes/
-    ├── env_files/
-    │   ├── dashboard1.env
-    │   └── dashboard2.env
-    ```
+# Secrets
+*.json  # TEMP: block all JSON files until reviewed
 
-3. **If you already committed a `.env` file, remove it from Git:**
-    ```bash
-    git rm --cached path/to/file.env
-    git commit -m "Remove tracked secret"
-    ```
+# Batch files (machine-specific)
+*.bat
+```
 
-4. **Create a `.env.example` file** to document required secrets:
-    ```env
-    API_KEY=your-api-key-here
-    SHEET_ID=your-sheet-id-here
-    ```
+### ✅ How to Remove Already-Committed Secrets
+If you've already committed something sensitive:
+```bash
+git rm --cached path/to/file
+git commit -m "Remove tracked secret"
+```
 
 ---
 
