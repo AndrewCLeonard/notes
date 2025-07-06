@@ -42,6 +42,41 @@ git push -u origin main
 
 ---
 
+## 🔐 STEP 3: Protect Secrets and Environment Variables
+
+**✅ Do this before pushing anything sensitive!**
+
+1. **Create a `.gitignore` file** (in your repo root) and add:
+    ```gitignore
+    # Ignore all env files
+    *.env
+
+    # Optional: ignore the folder where you store secrets
+    env_files/
+    ```
+
+2. **Move your `.env` files into a subfolder** like `env_files/` to stay organized:
+    ```
+    notes/
+    ├── env_files/
+    │   ├── dashboard1.env
+    │   └── dashboard2.env
+    ```
+
+3. **If you already committed a `.env` file, remove it from Git:**
+    ```bash
+    git rm --cached path/to/file.env
+    git commit -m "Remove tracked secret"
+    ```
+
+4. **Create a `.env.example` file** to document required secrets:
+    ```env
+    API_KEY=your-api-key-here
+    SHEET_ID=your-sheet-id-here
+    ```
+
+---
+
 ## 🔁 Common Pitfall Fixes
 
 **Check your remote URL:**
