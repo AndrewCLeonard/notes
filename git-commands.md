@@ -25,7 +25,7 @@
 | Pushing           | `git push`                                   | Update remote refs along with associated objects.                                                                                                                                                                                                                                                       |
 | Pushing           | `git push origin --delete <branch-name>`     | Delete a remote branch.                                                                                                                                                                                                                                                                                 |
 | Rebasing          | `git rebase <base>`                          | Reapply commits on top of another base tip.                                                                                                                                                                                                                                                             |
-| Remote Management | `git remote add <name> <url>`                | Add a remote named `<name>` for the repository at `<url>`.                                                                                                                                                                                                                                                  |
+| Remote Management | `git remote add <name> <url>`                | Add a remote named `<name>` for the repository at `<url>`.                                                                                                                                                                                                                                              |
 | Remote Management | `git remote -v`                              | List all configured remote repositories.                                                                                                                                                                                                                                                                |
 | Staging           | `git add <file>`                             | Add a file to the staging area.                                                                                                                                                                                                                                                                         |
 | Staging           | `git add .`                                  | Add all new and changed files to the staging area.                                                                                                                                                                                                                                                      |
@@ -56,3 +56,30 @@
 | `--no-ff`  |                  | Create a merge commit even if fast-forward is possible | `git merge`                  |
 | `--rebase` |                  | Reapply commits on top of another base                 | `git pull`                   |
 | `--tags`   |                  | Fetch all tags from remote                             | `git fetch`                  |
+
+## `git checkout` vs. `git switch`
+
+```text
+git switch my-branch              # same as git checkout my-branch
+git switch -c my-branch           # same as git checkout -b my-branch
+git switch -c my-branch HEAD~3    # branch off HEAD~3
+git switch --detach HEAD~3        # checkout commit without branching
+```
+
+### 🔹 How it combines with other args
+
+- git switch -c my-branch → create my-branch at the current commit (HEAD).
+- git switch -c my-branch HEAD~3 → create my-branch starting from 3 commits before HEAD.
+- Without -c, git switch my-branch just moves you onto an existing branch.
+
+### 🔹 Why it exists
+
+- git checkout was overloaded (it could mean “check out a commit,” “create branch,” “switch branch,” etc.).
+- Newer Git versions encourage:
+  - git switch for changing branches
+  - git restore for restoring files
+- This makes Git’s commands less confusing.
+
+🧠 So the rule of thumb:
+git switch my-branch → switch to it (must already exist).
+git switch -c my-branch → create then switch to it.

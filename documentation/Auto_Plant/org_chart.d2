@@ -1,0 +1,77 @@
+vars: {
+  d2-config: {
+    layout-engine: elk
+  }
+}
+
+title: |md
+  # Sample Company Structure
+| {near: top-center}
+
+classes: {
+  vp: {
+    style: {
+      fill: "#e0e0e0"
+      stroke: "#999999"
+    }
+  }
+  director: {
+    style: {
+      fill: "#ffe6cc"
+      stroke: "#ff9900"
+    }
+  }
+  sr_manager: {
+    style: {
+      fill: "#e6ccff"
+      stroke: "#9900cc"
+    }
+  }
+  manager: {
+    style: {
+      fill: "#ccffcc"
+      stroke: "#33aa33"
+    }
+  }
+  group_leader: {
+    style: {
+      fill: "#ffcccc"
+      stroke: "#cc0000"
+    }
+  }
+  team_member: {
+    style: {
+      fill: "#cce5ff"
+      stroke: "#0056b3"
+    }
+  }
+}
+
+Vice President -- "Sr. Director A"
+Vice President -- "Sr. Director B"
+Vice President.class: vp
+"Sr. Director A" -- "Sr. Manager A"
+"Sr. Director A" -- "Sr. Manager B"
+"Sr. Director A".class: director
+"Sr. Director B".class: director
+
+"Sr. Manager A" -- Manager A
+"Sr. Manager A" -- Manager B
+"Sr. Manager A".class: sr_manager
+"Sr. Manager B".class: sr_manager
+
+Manager A -- Group Leader A
+Manager A -- Group Leader B
+Manager A.class: manager
+Manager B.class: manager
+
+Group Leader A -- Team Member A
+Group Leader A -- Team Member B
+Group Leader B -- Team Member C
+Group Leader B -- Team Member D
+Group Leader A.class: group_leader
+Group Leader B.class: group_leader
+Team Member A.class: team_member
+Team Member B.class: team_member
+Team Member C.class: team_member
+Team Member D.class: team_member

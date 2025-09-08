@@ -1,3 +1,5 @@
+# Work Info Cleaning
+
 ```mermaid
 ---
 config:
@@ -21,25 +23,25 @@ flowchart LR
     HasNameMatch -- "No" --> NoNameMatches["No Name Match Found"]
     StoreABIDsName --> NameMatchDone(("Name Matching Complete"))
     NoNameMatches --> NameMatchDone
-    
+
     %% Parallel Check 2: Unique ID Matching
     ParallelChecks -- Unique ID Path --> UniqueIDMatching[["Check Unique IDs: Work Email / Employee ID"]]
     UniqueIDMatching --> WhichIDs{"Which Unique IDs are Present?"}
-    
+
     %% Branch: Work Email Only
     WhichIDs -- "Work Email Only" --> CheckWorkEmail{"Check Work Email in AB?"}
     CheckWorkEmail -- "Yes" --> StoreABIDsEmail["Store ABIDs from Work Email"]
     CheckWorkEmail -- "No" --> NoEmailMatch["No Email Match Found"]
     StoreABIDsEmail --> IDMatchDone(("Unique ID Matching Complete"))
     NoEmailMatch --> IDMatchDone
-    
+
     %% Branch: Employee ID Only
     WhichIDs -- "Employee ID Only" --> CheckEmployeeID{"Check Employee ID in AB?"}
     CheckEmployeeID -- "Yes" --> StoreABIDsEID["Store ABID(s) from Employee ID"]
     CheckEmployeeID -- "No" --> NoEIDMatch["No EID Match Found"]
     StoreABIDsEID --> IDMatchDone
     NoEIDMatch --> IDMatchDone
-    
+
     %% Branch: Both Work Email + EID
     WhichIDs -- "Both Email & EID" --> CheckBoth{"Both point to a single ABID?"}
     CheckBoth -- "Yes" --> StoreABIDsBoth["Store the ABID"]

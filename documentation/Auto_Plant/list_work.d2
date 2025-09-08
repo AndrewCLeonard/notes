@@ -1,0 +1,41 @@
+title: |md
+  # Worker List ERD
+| {near: top-center}
+
+Worker_List: {
+  shape: sql_table
+  First_Name: string
+  Last_Name: string
+  Phone_Number(s): string
+  Employee_ID: string {constraint: primary_key}
+  "@rivian.com_email": email {constraint: primary_key}
+  Classification: string {constraint: foreign_key}
+  Organization_Department: string {constraint: foreign_key}
+  Organization_Supervisor: string {constraint: foreign_key}
+}
+
+Cost_Centers: {
+  shape: sql_table
+  Cost_Center_Code: int as string {constraint: primary_key}
+  Cost_Center_Name: string
+  Cost_Center_Manager: manager's full name
+  Assuming_In_Unit: bool
+}
+
+Classifications: {
+  shape: sql_table
+  Classification: string {constraint: primary_key}
+  Job_In_Unit: True/False/Unknown
+}
+
+# Supervisors: {
+#   shape: sql_table
+#   First Name
+#   Last Name
+#   Department
+# }
+
+# Work Info
+
+Classifications.Classification -> Worker_List.Classification
+Cost_Centers.Cost_Center_Manager -> Worker_List.Organization_Supervisor

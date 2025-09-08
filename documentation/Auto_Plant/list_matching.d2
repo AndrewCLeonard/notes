@@ -1,0 +1,45 @@
+title: |md
+  # Matching AB to Worker Lists
+| {near: top-center}
+
+Worker_List: {
+  shape: sql_table
+  Full Name: string
+  Employee_ID: string {constraint: primary_key}
+  Phone_Number(s): string
+  Work Email: email {constraint: primary_key}
+  Classification ("Business Title"): string
+  Organization_Department: string 
+  Organization_Supervisor: string 
+}
+
+Action Builder Data: {
+  shape: sql_table
+  Interact_ID: int as string {constraint: primary_key}
+  First Name: string
+  Middle Name: string
+  Last Name: string
+  Nickname: string
+  Cost_Center_Manager: manager's full name
+  Assuming_In_Unit: bool
+}
+
+Classifications: {
+  shape: sql_table
+  Classification: string {constraint: primary_key}
+  Job_In_Unit: True/False/Unknown
+}
+
+Cost Center Data: {
+    shape: sql_table
+    
+}
+
+# Supervisors: {
+#   shape: sql_table
+#   First Name
+#   Last Name
+#   Department
+# }
+
+# Work Info

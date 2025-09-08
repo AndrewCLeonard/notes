@@ -1,0 +1,84 @@
+direction: down
+
+classes: {
+  AA: {
+    style: {
+      fill: "#ffe6cc"
+      stroke: "#ff9900"
+    }
+  }
+  AD: {
+    style: {
+      fill: "#cce5ff"
+      stroke: "#007bff"
+    }
+  }
+  leadership: {
+    style: {
+      fill: "#e0e0e0"
+      stroke: "#999999"
+    }
+  }
+  role_split: {
+    style: {
+      fill: "#ffffff"
+      stroke: "#cccccc"
+      stroke-dash: 3
+    }
+  }
+}
+
+# Level 1
+Jeff: "Jeff Balfour\nDepartment Director: Sourcing" {class: leadership}
+Marybeth: "Marybeth Seitz-Brown\nDeputy Organizing Director" {class: leadership}
+
+# sourcing
+
+Jeff -> Marybeth
+
+# Level 2
+Carla: "AA\nCarla\nBattery" {class: AA}
+# "Ken Lang Higher Ed": "AA\nKen Lang\nHigher Ed" {class: AA}
+# "Ken Lang R6": "AA\nKen Lang\nTesla/Lucid/Region 6 EV+" {class: AA}
+"Ken Lang": "AA\nKen Lang" {class: AA}
+Eric: "AD\nEric\nOEM Non-Region 6 & Non-Alabama" {class: AD}
+Tony: "AA\nTony Perlstein\nRegional Projects" {class: AA}
+Allen: "AD\nAllen\nAlabama OEM - except Mercedes" {class: AD}
+"Davere": "AD\nDavere\nMarybeth: Navistar & Others?\nBrian: Mercedes" {class: AD}
+Brian: "AA\nBrian\nMercedes" {class: AA}
+"Ken_HigherEd": "Higher Ed" {class: role_split}
+Ken_R6: "Tesla/Lucid/Region 6 EV+" {class: role_split}
+
+Marybeth -> Carla
+Marybeth -> "Ken Lang"
+"Ken Lang" -> Ken_HigherEd
+"Ken Lang" -> Ken_R6
+
+# Marybeth -> [Carla, Tony, Allen, Brian]
+Marybeth -> Eric
+
+Marybeth -> Tony
+
+Marybeth -> Allen
+
+Marybeth -> Brian
+
+Brian -> Davere
+Marybeth -> "Davere"
+Davere_Mercedes: "Mercedes Role\n(Brian)" {class: role_split}
+Davere_Navistar: "Navistar & Others\n(Marybeth)" {class: role_split}
+Davere -> Davere_Mercedes
+Davere -> Davere_Navistar
+
+# Level 3 to 4
+Carla -> Peter 
+Carla -> Saul
+Carla -> Aspen
+Carla -> Robbie
+# Carla -> Peter
+# Carla -> Saul
+# Carla -> Aspen
+# Carla -> Robbie
+"Ken_R6" -> "David Parsons"
+
+"David Parsons": "David Parsons"
