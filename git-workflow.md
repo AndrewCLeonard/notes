@@ -50,7 +50,6 @@ After tagging, you can safely delete the branch:
 
 - **Historical Reference**: Tags provide a fixed point in the project's history that's easy to find and refer back to, even after the branch is gone.
 - **Clean Repository**: By deleting branches that have served their purpose, you keep the repository's branch list manageable and focused on current work.
-
 - **Release and Milestone Tracking**: Tags are commonly used to mark release points, but they're also useful for marking any significant point in history, such as the end of a feature branch.
 
 Remember, tags are global to the repository and not tied to a specific branch, so even after the branch is deleted, the tag remains accessible as a reference to that snapshot of the code.
@@ -94,3 +93,118 @@ The Git team now advises users to use git switch for branch operations and git r
 - **Amend Unpushed Commits Only**: Safe for local, not for pushed commits.
 - **Communicate**: Notify team when rewriting shared branch history.
 - **Feature Branches**: Work on features separately, merge after review.
+
+## Everyday Git Workflows
+
+### Create and Push a New Branch
+
+1. Check current status:  
+   `git status`
+2. Create and switch to a new branch:  
+   `git switch -c feature/my-feature`
+3. Stage changes:  
+   `git add .`
+4. Commit changes:  
+   `git commit -m "Add my feature"`
+5. Push branch to remote and set upstream:  
+   `git push -u origin feature/my-feature`
+
+---
+
+### Update a Branch with Latest Main
+
+1. Switch to main:  
+   `git switch main`
+2. Fetch latest changes:  
+   `git fetch`
+3. Pull updates:  
+   `git pull`
+4. Switch back to your feature branch:  
+   `git switch feature/my-feature`
+5. Merge main into your branch:  
+   `git merge main`  
+   _(or rebase for a cleaner history)_  
+   `git rebase main`
+
+---
+
+### Open a Pull Request (PR)
+
+1. Push your branch (if not already pushed):  
+   `git push -u origin feature/my-feature`
+2. Go to your repository on GitHub/GitLab/Bitbucket.
+3. Select _Compare & Pull Request_ (GitHub) or _Merge Request_ (GitLab).
+4. Review and create PR/MR.
+
+---
+
+### Stash Changes Before Switching Branches
+
+1. Stash current work:  
+   `git stash`
+2. Switch to another branch:  
+   `git switch main`
+3. Later, reapply stash:  
+   `git stash pop`
+
+---
+
+### Delete a Branch
+
+#### Local
+
+- Safe delete:  
+  `git branch -d feature/my-feature`
+- Force delete (unmerged):  
+  `git branch -D feature/my-feature`
+
+#### Remote
+
+- Delete remote branch:  
+  `git push origin --delete feature/my-feature`
+
+---
+
+### Roll Back a Mistake
+
+#### Undo last commit but keep changes staged
+
+`git reset --soft HEAD~1`
+
+#### Undo last commit and unstage changes
+
+`git reset --mixed HEAD~1`
+
+#### Undo last commit and discard changes
+
+`git reset --hard HEAD~1`
+
+#### Revert a commit safely
+
+`git revert <commit-hash>`
+
+---
+
+### Tag a Release
+
+1. Create a tag:  
+   `git tag v1.0.0`
+2. Push the tag:  
+   `git push origin v1.0.0`
+3. Delete local tag:  
+   `git tag -d v1.0.0`
+4. Delete remote tag:  
+   `git push origin --delete v1.0.0`
+
+---
+
+### Inspecting History
+
+- View log as a simple list:  
+  `git log --oneline`
+- View all branches and graph:  
+  `git log --all --decorate --oneline --graph`
+- View changes in last commit:  
+  `git show`
+- View staged changes:  
+  `git diff --staged`
