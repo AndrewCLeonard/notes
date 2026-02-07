@@ -148,6 +148,41 @@ py -m pip freeze
 
 ---
 
+## `py` vs `python` on Windows (why it matters)
+
+### What changes
+- **`py`** uses the Windows *Python Launcher* (more predictable, can target versions like `py -3.12`).
+- **`python`** runs whichever `python.exe` comes first on your **PATH** (could be your venv, system Python, or the Windows Store shim).
+
+### When it makes no difference
+- If your venv is activated and `python` points into it, then:
+  - `python -m pip ...` installs into the venv (fine).
+
+### When it causes problems
+- If your venv is NOT activated, `python` may point to a global/system Python, so:
+  - `python -m pip install ...` installs packages somewhere else
+  - then your project’s venv Python can’t import them (“installed it but import fails”).
+
+### Verify (no guessing)
+Run these in the same terminal session you’re using:
+
+```powershell
+python -c "import sys; print(sys.executable)"
+python -m pip --version
+```
+
+✅ Good: both paths point inside ...\<repo>\.venv\...
+
+Zero-ambiguity option (works even without activation)
+
+Force the repo venv interpreter directly:
+```powershell
+.\.venv\Scripts\python.exe -m pip install <package>
+.\.venv\Scripts\python.exe your_script.py
+```
+
+---
+
 ## Two classic failure modes
 1) Installed into one Python, ran another → “installed it but import fails”
 2) Local filename shadows a module (e.g., `dotenv.py` breaks `import dotenv`)
