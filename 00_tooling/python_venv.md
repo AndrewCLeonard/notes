@@ -1,251 +1,136 @@
-# Virtual Environments (venv) & pip
+# Virtual Environments (venv) & pip (Windows)
 
-## Create
+## Goal
+Keep each project’s Python packages isolated and reproducible.
+
+---
+
+## Create a venv (repo root)
+Convention: use `.venv/` as the folder name.
 
 ```powershell
 py -m venv .venv
 ```
 
-## Activate
+---
 
+## Activate / Deactivate (PowerShell)
+
+Activate:
 ```powershell
 .\.venv\Scripts\Activate.ps1
 ```
 
-Prompt should show:
-
+Your prompt should show something like:
 ```text
 (.venv)
 ```
 
-Prompt typically shows (venv) when active.
-
 Deactivate:
-
 ```powershell
 deactivate
 ```
 
-## Prove it worked
+---
 
+## Prove you’re using the venv (no guessing)
+
+Which Python am I running?
 ```powershell
 python -c "import sys; print(sys.executable)"
 ```
+✅ Good: path points inside `...\<repo>\.venv\Scripts\python.exe`
 
-Must point inside `.venv`.
-
----
-
-## venv-pip
-
-### Goal
-
-Keep each project’s Python packages isolated and reproducible.
+Which pip is tied to that Python?
+```powershell
+python -m pip --version
+```
+✅ Good: path points inside `...\<repo>\.venv\Lib\site-packages\...`
 
 ---
 
-### Create a venv (repo root)
+## The safest pip habit (works with or without activation)
 
-````powershell
-py -m venv venv
+### Always run pip through an interpreter
+This avoids “installed it but import fails” due to mismatched environments.
 
-Activate venv (PowerShell)
-.\venv\Scripts\Activate.ps1
-
-
-Prompt typically shows (venv) when active.
-
-Deactivate:
-
-deactivate
-
-The safest pip habit (works with/without activation)
-
-Always run pip via the interpreter you intend to use:
-
+Preferred on Windows:
+```powershell
 py -m pip install <package>
 py -m pip install --upgrade <package>
 py -m pip list
 py -m pip freeze
+```
 
-
-If you want to force use of the repo venv without activation:
-
-.\venv\Scripts\python.exe -m pip install <package>
-.\venv\Scripts\python.exe your_script.py
-
-Diagnose “wrong environment” in 10 seconds
-
-Which Python am I running?
-
-python -c "import sys; print(sys.executable)"
-
-
-Which pip is tied to that python?
-
-python -m pip --version
-
-
-Good: both paths point into ...\<repo>\venv\....
-
-Common pitfalls
-
-Installing with global pip then running venv python (or vice versa).
-
-Confusing PowerShell vs Python REPL:
-
->>> means you’re inside Python; use exit() to return to shell.
-
-Shadowing modules with filenames (e.g., a local dotenv.py breaking import dotenv).
-
-Minimal workflow
-
-Activate venv (optional but convenient)
-
-Install packages with python -m pip ...
-
-Run scripts with python ...
-
-Snapshot with pip freeze when you want reproducibility
-
-
-```md
-# py-vs-python.md
-
-## On Windows: `py` and `python` are not the same thing
-
-### `py`
-- The **Python Launcher for Windows**
-- Often the most reliable way to select Python versions
-- Good default for “do I have Python installed and which one?”
-
-Examples:
+If your venv is active, these also target the venv:
 ```powershell
-py --version
-py -c "import sys; print(sys.executable)"
-py -m pip --version
-
-python
-
-Runs the first python.exe found on your PATH
-
-Might be:
-
-your venv python
-
-a system install python
-
-the Windows Store shim (WindowsApps\python.exe)
-
-Examples:
-
-python --version
-python -c "import sys; print(sys.executable)"
-python -m pip --version
-
-The core rule
-
-Always tie pip to the interpreter you intend to run:
-
-Safe:
-
-py -m pip install <package>
-
-
-Also safe (when venv is active / python points where you expect):
-
 python -m pip install <package>
+python -m pip install --upgrade <package>
+python -m pip list
+python -m pip freeze
+```
 
-Fast checks (no guessing)
-python -c "import sys; print(sys.executable)"
-python -m pip --version
+---
 
+## Force the repo venv without activation (zero ambiguity)
+Use the venv’s interpreter directly:
 
-If those paths don’t match the environment you expect, you’re using the wrong interpreter.
+```powershell
+.\.venv\Scripts\python.exe -m pip install <package>
+.\.venv\Scripts\python.exe your_script.py
+```
 
-Practical habit
+---
 
-Use py when setting up environments and installing packages.
+## Python flags vs pip flags (don’t mix these up)
 
-Use python once you’ve activated your venv and confirmed sys.executable points into it.
+### Python flag: `-m` (run a module)
+```powershell
+py -m pip --version
+```
+- `-m` belongs to **Python**
+- Means: “run the module named `pip` using this interpreter”
 
-If you want zero ambiguity
+### pip flag: `-r` (read requirements file)
+```powershell
+py -m pip install -r requirements.txt
+```
+- `-r` belongs to **pip**
+- Means: “install packages listed in this file”
 
-Call the venv interpreter directly:
+Other common pip flags:
+- `--upgrade` / `-U`: upgrade package(s)
 
-.\venv\Scripts\python.exe -m pip install <package>
-.\venv\Scripts\python.exe your_script.py
+---
 
+## Snapshot dependencies (reproducibility)
 
-```md
-# requirements-freeze.md
-
-## Two different files people call “requirements”
-You need to know which one you’re making.
-
-### A) Snapshot / lock (exact environment)
-Produced by:
+Write a lock-style snapshot:
 ```powershell
 py -m pip freeze > requirements.txt
 ```
 
-Captures everything installed, including transitive dependencies.
-
-Good for: “recreate my current environment exactly.”
-
-Noisy, but simple and effective for a personal repo.
-
-Install from it:
-
+Recreate from snapshot:
+```powershell
 py -m pip install -r requirements.txt
+```
 
-B) Top-level intent (minimal)
+Note: `pip freeze` includes transitive dependencies; noisy but simple and reliable for personal projects.
 
-A hand-written list of the packages you chose, e.g.:
+---
 
-pandas
-python-dotenv
-requests
+## Common pitfalls
+- Installing with one interpreter’s pip and running another interpreter.
+- Confusing PowerShell with Python REPL:
+  - `>>>` means you’re inside Python; type `exit()` to return to the shell.
+- Shadowing modules with filenames:
+  - e.g., a local `dotenv.py` breaks `import dotenv`.
 
+---
 
-Good for: sharing a project without pinning every transitive package.
-
-Not an exact lock unless you pin versions.
-
-Beginner-friendly default
-
-For now: treat requirements.txt as A) snapshot.
-
-Workflow:
-
-Install/upgrade packages
-
-Run your code
-
-Freeze:
-
-py -m pip freeze > requirements.txt
-
-Upgrading packages (choose deliberately)
-
-Preferred: upgrade one package at a time:
-
-py -m pip install --upgrade pandas
-
-
-If you “upgrade everything,” expect churn. Afterward, run your code and freeze again.
-
-Sanity checks
-py -m pip list
-py -m pip freeze
-py -m pip show pandas
-
-One hard rule
-
-Run pip through the interpreter:
-
-py -m pip ...
-
-
-This prevents “installed it but import fails” due to mismatched environments.
-````
+## Minimal workflow (day-to-day)
+1) Create venv once: `py -m venv .venv`
+2) Activate: `.\.venv\Scripts\Activate.ps1`
+3) Install packages: `python -m pip install ...`
+4) Run code: `python your_script.py`
+5) Freeze when you want reproducibility: `py -m pip freeze > requirements.txt`
