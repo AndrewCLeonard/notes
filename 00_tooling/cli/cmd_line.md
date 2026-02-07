@@ -163,36 +163,6 @@ If `sys.executable` is not inside your project’s `.venv`, you are in the wrong
 
 ---
 
-## Virtual Environments (venv)
-
-### Create
-
-```powershell
-py -m venv .venv
-```
-
-### Activate
-
-```powershell
-.\.venv\Scripts\Activate.ps1
-```
-
-Prompt should show:
-
-```text
-(.venv)
-```
-
-### Prove it worked
-
-```powershell
-python -c "import sys; print(sys.executable)"
-```
-
-Must point inside `.venv`.
-
----
-
 ## Stop Memorizing Flags — Ask This Instead
 
 After every command, ask:
