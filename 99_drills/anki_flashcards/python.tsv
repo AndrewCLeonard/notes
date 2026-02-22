@@ -1,0 +1,78 @@
+Stage	Order	Question	Answer	Example	Tags	Difficulty
+0_meta	1	What’s the AI-era goal for Python/pandas learning?	Fluent reading comprehension + error detection (not “code everything by hand”)	Be able to read/modify/debug AI-generated code quickly	meta,learning	medium
+0_meta	2	What’s the “music scales” analogy in this context?	Stage 1 cards are scales: foundational patterns you must internalize to read code fluently	You can’t debug what you can’t read	meta,learning	medium
+0_meta	3	When is a flashcard worth adding?	When you’ve looked it up 3+ times OR mistakes cause silent bad data OR it’s used weekly	Add one card that prevents a repeat error	meta,learning	medium
+0_meta	4	What’s the rule for “new nouns” in cards?	No noun without a definition card first	Define “boolean mask” before using it	meta,learning	medium
+0_meta	5	Regex learning rule of thumb?	Memorize basic building blocks; let AI handle complex patterns	\w \s \d + * ? ^ $ are basics	regex,learning	medium
+0_meta	6	What should you do after 2–3 months of fluency?	Archive most syntax cards; keep gotchas + diagnostics + edge cases	Keep the “smell tests”	meta,learning	medium
+1_prereq	1	Regex: what does \d match?	A digit (0–9)	"abc123" -> matches "1","2","3"	regex,basics	easy
+1_prereq	2	Regex: what does \D match?	A non-digit	df['Phone'].str.replace(r'\D', '', regex=True)	regex,basics	easy
+1_prereq	3	Regex: what does \s match?	Whitespace (space/tab/newline)	r"\s+" matches multiple spaces	regex,basics	easy
+1_prereq	4	Regex: what does \S match?	Non-whitespace	r"\S+" matches a word token	regex,basics	medium
+1_prereq	5	Regex: what does \w match?	Word char (letters/digits/underscore; engine-dependent for Unicode)	r"\w+" matches tokens	regex,basics	medium
+1_prereq	6	Regex: what does . match?	Any character (except newline in many engines)	".*" matches almost anything	regex,basics	easy
+1_prereq	7	Regex: what does + mean?	One or more of the previous token	r"\d+" matches 123	regex,basics	easy
+1_prereq	8	Regex: what does * mean?	Zero or more of the previous token	r"\s*" matches empty or spaces	regex,basics	easy
+1_prereq	9	Regex: what does ? mean?	Zero or one of the previous token	r"-?\d+" optional minus	regex,basics	medium
+1_prereq	10	Regex: what do ^ and $ do?	Anchors (start and end of string)	"^.*\s+(\w+)$" captures last token	regex,basics	medium
+1_prereq	11	Regex: what does [...] mean?	Character class (one of these chars)	"[A-Za-z]+" matches letters	regex,basics	medium
+1_prereq	12	Regex: what does [^...] mean?	Negated character class (anything except these chars)	"[^0-9]+" matches non-digits	regex,basics	medium
+1_prereq	13	Why use raw strings for regex in Python?	Avoids Python escape processing of backslashes	r"\s+" safer than "\s+"	python,strings,regex	medium
+1_prereq	14	In pandas, what does df['Age'] return?	A Series (one column)	type(df['Age']) == Series	pandas,basics	easy
+1_prereq	15	What does df['Age'] > 30 return?	A boolean Series (True/False per row)	df['Age'] > 30	pandas,boolean	easy
+1_prereq	16	What is a boolean mask?	A boolean Series used to filter rows	mask = df['Age'] > 30	pandas,boolean,filtering	easy
+1_prereq	17	How do you filter a DataFrame with a mask?	df[mask]	df[df['Age'] > 30]	pandas,filtering	easy
+1_prereq	18	Mask length requirement?	len(mask) == len(df)	mask must align to rows	pandas,filtering	medium
+1_prereq	19	AND operator for pandas conditions?	& (not 'and')	df[(df['Age']>30) & (df['City']=='NY')]	pandas,boolean	medium
+1_prereq	20	OR operator for pandas conditions?	| (not 'or')	df[(df['Age']>30) | (df['City']=='LA')]	pandas,boolean	medium
+1_prereq	21	NOT operator for pandas masks?	~	df[~df['Name'].isna()]	pandas,boolean	medium
+1_prereq	22	Why parentheses with & and |?	Operator precedence requires them	(df['Age']>30) & (df['City']=='NY')	pandas,boolean,gotchas	medium
+1_prereq	23	What does .isin(...) return?	Boolean Series (membership test)	df['Name'].isin(['Alice','Bob'])	pandas,boolean	easy
+1_prereq	24	Filter rows where Name is in a list	df[df['Name'].isin(list)]	df[df['Name'].isin(['Alice','Bob'])]	pandas,filtering	easy
+1_prereq	25	Filter rows where Name is NOT in a list	df[~df['Name'].isin(list)]	df[~df['Name'].isin(['Alice','Bob'])]	pandas,filtering	medium
+1_prereq	26	What does .str.contains('John') return?	Boolean Series (substring test)	df['Name'].str.contains('John')	pandas,strings,boolean	medium
+1_prereq	27	Null-safe contains without fillna?	Use na=False	df['Name'].str.contains('John', na=False)	pandas,strings,nulls	medium
+1_prereq	28	Case-insensitive contains?	Use case=False	df['Name'].str.contains('john', case=False, na=False)	pandas,strings	medium
+1_prereq	29	What is forward fill (ffill)?	Fill missing values from previous non-null value	[1, NaN, NaN, 4] -> [1,1,1,4]	pandas,nulls	medium
+1_prereq	30	Forward fill a Series	series.ffill()	df['Age'] = df['Age'].ffill()	pandas,nulls	medium
+1_prereq	31	What is df.merge used for?	Join two DataFrames by matching keys	people.merge(status, on='Email', how='left')	pandas,merging	easy
+1_prereq	32	What does on='Email' mean?	Match rows where Email values are equal	df.merge(other, on='Email')	pandas,merging	easy
+1_prereq	33	What does how='left' mean?	Keep all left rows; add matches from right	Left join / VLOOKUP behavior	pandas,merging	easy
+1_prereq	34	What is groupby in pandas?	Split into groups by key(s), then aggregate	df.groupby('Dept').size()	pandas,groupby	easy
+1_prereq	35	What does reset_index do after groupby?	Turn index (group keys) back into columns	df.groupby('Dept').size().reset_index()	pandas,groupby	medium
+1_prereq	36	What is SettingWithCopyWarning?	Warning you may be assigning to a slice, not the original	df[df['Age']>30]['Status']='Old'	pandas,gotchas	high
+1_prereq	37	Fix SettingWithCopyWarning with .loc	df.loc[cond, col] = value	df.loc[df['Age']>30,'Status']='Old'	pandas,gotchas	high
+1_prereq	38	Python loop: iterate through list items	for x in items: ...	for x in my_list: print(x)	python,loops	easy
+1_prereq	39	Python loop: iterate dict key/value pairs	d.items()	for k,v in my_dict.items(): ...	python,loops	medium
+1_prereq	40	How do you break out of a loop early?	break	for x in xs: ...; break	python,loops	easy
+2_core	1	Interpret this code: df.loc[df['Age'].isna(), 'Status'] = 'Unknown'	Sets Status='Unknown' where Age is null	Conditional assignment with .loc	pandas,loc,reading	medium
+2_core	2	Select multiple columns syntax	df[['Name','Age']]	Double brackets return a DataFrame	pandas,selection	medium
+2_core	3	Drop rows with any nulls	df.dropna()	Removes rows with at least one NaN	pandas,nulls	medium
+2_core	4	Drop rows where a specific column is null	df.dropna(subset=['Age'])	Drops only if Age is NaN	pandas,nulls	medium
+2_core	5	Fill null values with a constant	df['Age'].fillna(0)	Replace NaN with 0	pandas,nulls	medium
+2_core	6	Difference: fillna vs dropna	fillna replaces; dropna removes	fillna keeps rows; dropna loses rows	pandas,nulls	easy
+2_core	7	Create a boolean flag column	df['In_DB'] = df['Email'].isin(other['Email'])	Boolean membership flag	pandas,columns	medium
+2_core	8	Map booleans to labels	df['Status'] = df['In_DB'].map({True:'Found', False:'Missing'})	Boolean -> text labels	pandas,columns	medium
+2_core	9	Cascading conditions pattern	Set default, then overwrite with .loc	df['Cat']='Unknown'; df.loc[df['Age']<18,'Cat']='Minor'	pandas,loc	high
+2_core	10	Sort by a column ascending	df.sort_values('Age')	Ascending by default	pandas,sorting	easy
+2_core	11	Sort descending	df.sort_values('Age', ascending=False)	Largest to smallest	pandas,sorting	easy
+2_core	12	Groupby count rows	df.groupby('Dept').size()	Counts rows per Dept	pandas,groupby	medium
+2_core	13	Groupby count non-null values	df.groupby('Dept')['Age'].count()	Counts non-NaN Age per Dept	pandas,groupby	medium
+2_core	14	Groupby mean	df.groupby('Dept')['Salary'].mean()	Average Salary per Dept	pandas,groupby	medium
+2_core	15	Tooling: which Python interpreter am I running?	python -c "import sys; print(sys.executable)"	Should point inside .venv if active	tooling,python,diagnostics	medium
+2_core	16	Tooling: which pip is tied to this Python?	python -m pip --version	Shows pip path for current interpreter	tooling,pip,diagnostics	medium
+3_smell_tests	1	Smell test: AI gives df[df['Age'] > 30]['Status'] = 'Old' — what's wrong?	SettingWithCopyWarning: assigning to a slice. Use .loc	df.loc[df['Age']>30,'Status']='Old'	pandas,gotchas,debugging	high
+3_smell_tests	2	Smell test: merge result has MORE rows than left df — likely cause?	Duplicate keys causing many-to-many join	Duplicates in right (or both) key column	pandas,merging,debugging	high
+3_smell_tests	3	Smell test: merge result has FEWER rows than left df (inner join) — why?	Some keys didn’t match	Inner keeps only matched keys	pandas,merging,debugging	high
+3_smell_tests	4	Smell test: df['Name'].str.contains('John') errors about NA/boolean mask — why?	Nulls in Name column; fix with na=False	df['Name'].str.contains('John', na=False)	pandas,strings,nulls,debugging	high
+3_smell_tests	5	Smell test: df['Phone'].str.replace(r'\D','') fails — likely why?	Nulls in Phone; fill or use na-handling first	df['Phone'].fillna('').str.replace(r'\D','', regex=True)	pandas,strings,nulls,debugging	high
+3_smell_tests	6	Smell test: why can & and | “randomly” break without parentheses?	Precedence: comparisons must be grouped	(df['A']>0) & (df['B']>0)	pandas,boolean,debugging	high
+3_smell_tests	7	Smell test: why does pip install work but import fails?	Installed into different interpreter/env; use python -m pip + sys.executable	Check sys.executable and python -m pip --version	tooling,pip,venv,debugging	high
+3_smell_tests	8	Smell test: df.shape() throws TypeError — why?	shape is an attribute, not a method	Use df.shape not df.shape()	pandas,basics,debugging	medium
+3_smell_tests	9	Smell test: Path('file.csv') works sometimes and fails other times — why?	Relative paths depend on current working directory (cwd)	Print Path.cwd() to see where it’s looking	python,pathlib,debugging	high
+3_smell_tests	10	Smell test: phone numbers lose leading zeros — likely cause?	Auto numeric dtype conversion; read as strings	dtype=str in read_csv	pandas,io,dtypes,debugging	high
+4_gated_later	1	What does indicator=True do in merge?	Adds a match-status column named _merge	df.merge(other, on='Email', indicator=True)	pandas,merging	gated
+4_gated_later	2	What values can _merge take?	both, left_only, right_only	df['_merge'].value_counts()	pandas,merging	gated
+4_gated_later	3	Merge safety belt: validate cardinality	validate='one_to_one' etc.	df.merge(other, on='Email', validate='one_to_one')	pandas,merging	gated
+4_gated_later	4	Groupby multiple aggregations at once	.agg({...})	df.groupby('Dept').agg({'Salary':'mean','Age':'max'})	pandas,groupby	gated
+4_gated_later	5	Complex regex you should usually NOT memorize	Lookaheads, full email/URL validators, multi-format date parsers	Ask AI, then validate with test cases	regex,advanced,gated	gated
