@@ -78,12 +78,12 @@ Diagnose “wrong environment” in 10 seconds
 
 Which Python am I running?
 
-python -c "import sys; print(sys.executable)"
+`python -c "import sys; print(sys.executable)"`
 
 
 Which pip is tied to that python?
 
-python -m pip --version
+`python -m pip --version`
 
 
 Good: both paths point into ...\<repo>\venv\....
