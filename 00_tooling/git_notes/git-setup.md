@@ -15,27 +15,32 @@
 ## ✅ STEP 2: Run These Commands in Terminal (Inside Your Repo Folder)
 
 **Open the terminal in VS Code:**
+
 ```bash
 cd path/to/your/notes
 ```
 
 **Initialize Git if you haven’t yet:**
+
 ```bash
 git init
 ```
 
 **Add everything and commit it:**
+
 ```bash
 git add .
 git commit -m "Initial commit"
 ```
 
 **Link to the remote GitHub repo:**
+
 ```bash
 git remote add origin git@github.com:your-username/notes.git
 ```
 
 **Push to GitHub:**
+
 ```bash
 git push -u origin main
 ```
@@ -44,12 +49,14 @@ git push -u origin main
 
 ## 🔐 STEP 3: Protect Secrets and Sensitive Files
 
-### 🛑 NEVER COMMIT:
+### 🛑 NEVER COMMIT
+
 - `.env` files
 - JSON files with `spreadsheetId`, `client_id`, `api_key`, or full paths
 - Credentials of any kind
 
 ### ✅ Recommended `.gitignore` Setup
+
 ```gitignore
 # Environments
 *.env
@@ -70,7 +77,9 @@ ENV/
 ```
 
 ### ✅ How to Remove Already-Committed Secrets
+
 If you've already committed something sensitive:
+
 ```bash
 git rm --cached path/to/file
 git commit -m "Remove tracked secret"
@@ -81,22 +90,26 @@ git commit -m "Remove tracked secret"
 ## 🔁 Common Pitfall Fixes
 
 **Check your remote URL:**
+
 ```bash
 git remote -v
 ```
 
 **Remove incorrect remote and re-add:**
+
 ```bash
 git remote remove origin
 git remote add origin <correct-URL>
 ```
 
 **If you see this error:**
-```
+
+```bash
 error: src refspec main does not match any
 ```
 
 Run:
+
 ```bash
 git branch -M main
 git push -u origin main

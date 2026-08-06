@@ -5,6 +5,7 @@
 **Built-in function that gives you both index AND item when looping.**
 
 Instead of manual counter:
+
 ```python
 index = 0
 for item in items:
@@ -13,6 +14,7 @@ for item in items:
 ```
 
 Use enumerate:
+
 ```python
 for index, item in enumerate(items):
     print(index, item)
@@ -41,6 +43,7 @@ for name in names:
 ```
 
 **Problems:**
+
 - Have to initialize counter
 - Have to increment it
 - Easy to forget
@@ -48,7 +51,7 @@ for name in names:
 
 ---
 
-### With enumerate() (Better)
+### With `enumerate()` (Better)
 
 ```python
 from typing import List
@@ -65,6 +68,7 @@ for i, name in enumerate(names):
 ```
 
 **Benefits:**
+
 - No manual counter
 - Can't forget to increment
 - Cleaner, more Pythonic
@@ -108,6 +112,7 @@ for i, name in enumerate(names):
 ```
 
 **Type of enumerate():**
+
 ```python
 from typing import List
 
@@ -210,6 +215,7 @@ print(found_index)  # 2
 ```
 
 **Better way:** Use `.index()` method
+
 ```python
 found_index: int = names.index("Carol")  # 2
 ```
@@ -308,7 +314,7 @@ batch_size: int = 100
 
 for i, record in enumerate(records):
     # process_record(record)
-    
+
     # Checkpoint every 100 records
     if (i + 1) % batch_size == 0:
         print(f"Processed {i + 1} records")
@@ -322,18 +328,21 @@ for i, record in enumerate(records):
 ### ✅ Use enumerate when:
 
 1. **Need both index and item**
+
    ```python
    for i, item in enumerate(items):
        print(f"Item {i}: {item}")
    ```
 
 2. **Creating numbered output**
+
    ```python
    for i, task in enumerate(tasks, start=1):
        print(f"{i}. {task}")
    ```
 
 3. **Modifying list in place**
+
    ```python
    for i, value in enumerate(values):
        values[i] = transform(value)
@@ -353,34 +362,37 @@ for i, record in enumerate(records):
 ### ❌ Don't use enumerate when:
 
 1. **Only need the item**
+
    ```python
    # BAD
    for i, name in enumerate(names):
        print(name)  # Not using i
-   
+
    # GOOD
    for name in names:
        print(name)
    ```
 
 2. **Only need the index**
+
    ```python
    # BAD
    for i, _ in enumerate(items):
        process_index(i)
-   
+
    # GOOD
    for i in range(len(items)):
        process_index(i)
    ```
 
 3. **Using .index() is clearer**
+
    ```python
    # BAD
    for i, item in enumerate(items):
        if item == target:
            return i
-   
+
    # GOOD
    return items.index(target)
    ```
@@ -431,6 +443,7 @@ for i, item in enumerate(items):
 ```
 
 **Better way:** Use string join
+
 ```python
 print(", ".join(items[:-1]) + ".")
 ```
@@ -457,6 +470,7 @@ for i, item in enumerate(items):
 ```
 
 **Better way:** Slice the list
+
 ```python
 for item in items[1:]:
     print(item)
@@ -552,6 +566,7 @@ for i in range(len(items)):
 ```
 
 **Problems:**
+
 - Have to index into list: `items[i]`
 - More error-prone
 - Less readable
@@ -572,6 +587,7 @@ for i, item in enumerate(items):
 ```
 
 **Benefits:**
+
 - Direct access to item
 - No manual indexing
 - Clearer intent
@@ -582,6 +598,7 @@ for i, item in enumerate(items):
 ### When range(len()) is OK
 
 **Only when you need just the indices:**
+
 ```python
 from typing import List
 
@@ -590,6 +607,7 @@ indices: List[int] = list(range(len(items)))
 ```
 
 **But even then, prefer:**
+
 ```python
 indices: List[int] = [i for i, _ in enumerate(items)]
 ```
@@ -703,17 +721,20 @@ for i, item in enumerate(items):
 ```
 
 **Start counting from 1:**
+
 ```python
 for i, item in enumerate(items, start=1):
     print(f"{i}. {item}")
 ```
 
 **Don't use enumerate when:**
+
 - Only need item: `for item in items:`
 - Only need index: `for i in range(len(items)):`
 - Can use `.index()` method instead
 
 **Type hints:**
+
 ```python
 from typing import List
 
@@ -724,6 +745,7 @@ for i, item in enumerate(items):
 ```
 
 **Key benefits:**
+
 - ✓ No manual counter
 - ✓ Can't forget to increment
 - ✓ More readable

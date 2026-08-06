@@ -5,6 +5,7 @@
 **One-line syntax for building lists, dicts, and sets from iterables.**
 
 Instead of:
+
 ```python
 results = []
 for item in items:
@@ -12,6 +13,7 @@ for item in items:
 ```
 
 Write:
+
 ```python
 results = [transform(item) for item in items]
 ```
@@ -130,7 +132,7 @@ from typing import List
 
 # Clean phone numbers
 phones: List[str] = ["(555) 123-4567", "555.987.6543", "555-111-2222"]
-cleaned: List[str] = [p.replace("(", "").replace(")", "").replace("-", "").replace(".", "").replace(" ", "") 
+cleaned: List[str] = [p.replace("(", "").replace(")", "").replace("-", "").replace(".", "").replace(" ", "")
                       for p in phones]
 # Result: ["5551234567", "5559876543", "5551112222"]
 
@@ -178,7 +180,7 @@ flat: List[int] = [num for row in matrix for num in row]
 
 ## Dictionary Comprehensions
 
-### Basic Pattern
+### Basic Pattern for Dictionary Comprehensions
 
 ```python
 from typing import Dict
@@ -322,7 +324,7 @@ lengths: Set[int] = {len(word) for word in words}
 
 ```python
 # BAD: Hard to read
-result = [process(item) if condition1(item) else fallback(item) 
+result = [process(item) if condition1(item) else fallback(item)
           for item in data if filter1(item) and filter2(item)]
 
 # GOOD: Clear loop
@@ -463,11 +465,13 @@ result: List[int] = [n**2 for n in numbers if n % 2 == 0]
 ```
 
 **Comprehension is:**
+
 - ✓ More concise
 - ✓ Often faster
 - ✓ More "Pythonic"
 
 **But loop is better when:**
+
 - Logic is complex
 - Need multiple statements
 - Performing side effects
@@ -569,21 +573,25 @@ doubled: List[int] = [i * 2 for i in items]
 ## Summary
 
 **List comprehension:**
+
 ```python
 [expression for item in iterable if condition]
 ```
 
 **Dict comprehension:**
+
 ```python
 {key_expr: value_expr for item in iterable if condition}
 ```
 
 **Set comprehension:**
+
 ```python
 {expression for item in iterable if condition}
 ```
 
 **Key points:**
+
 - Use for simple transformations
 - Add `if` to filter
 - Use loops for complex logic

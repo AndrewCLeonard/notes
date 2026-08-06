@@ -101,6 +101,12 @@ Pandas — `loc[]` for assignment, `np.where()` for inline:
 
 ### `loc[]` — assign to a column conditionally (most common)
 
+`loc[]` always has this structure:
+
+```python
+df.loc[ROW CONDITION, COLUMN TO WRITE TO] = VALUE
+```
+
 ```python
 # Single condition
 df.loc[df['status'] == 'Active', 'is_active'] = 'Yes'

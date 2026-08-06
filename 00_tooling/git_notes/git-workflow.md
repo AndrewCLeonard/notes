@@ -1,210 +1,476 @@
-# Git Workflow Lessons
+# Git Workflow Reference
 
-## Tagging Commits
-
-Tagging the last commit of a branch before deleting it is a great way to preserve a reference to that point in the project's history without keeping the branch itself. Tags in Git are pointers to specific commits and can serve as milestones or markers for significant versions or states of the code. They are particularly useful for marking releases, but you can also use them to mark the final state of a branch.
-
-Here's how you can tag the last commit of a branch before deleting the branch:
-
-## Tagging the Last Commit
-
-1. First, ensure you're on the branch you intend to delete (or know the commit hash you want to tag):
-
-   ```sh
-   git checkout branch-name
-   ```
-
-2. Tag the last commit. You can create a lightweight tag or an annotated tag. Annotated tags are recommended because they can contain metadata such as the tagger name, email, date, and tagging message:
-
-   ```sh
-   git tag -a tag-name -m "Tagging the last commit of branch-name before deletion"
-   ```
-
-   Replace `tag-name` with a meaningful name for the tag and `branch-name` with the name of your branch. The `-m` flag allows you to add a message describing the purpose of the tag.
-
-3. Push the tag to the remote repository. Unlike branches, tags are not automatically synchronized between local and remote repositories. To share the tag with your team or preserve it on the remote server, you need to push it:
-
-   ```sh
-   git push origin tag-name
-   ```
-
-## Deleting the Branch
-
-After tagging, you can safely delete the branch:
-
-- **Locally**:
-
-  ```sh
-  git branch -d branch-name
-  ```
-
-  Use `-D` instead of `-d` if Git warns you about the branch not being fully merged (if you're sure it's safe to delete).
-
-- **Remotely**:
-
-  ```sh
-  git push origin --delete branch-name
-  ```
-
-## Benefits of Tagging Before Deletion
-
-- **Historical Reference**: Tags provide a fixed point in the project's history that's easy to find and refer back to, even after the branch is gone.
-- **Clean Repository**: By deleting branches that have served their purpose, you keep the repository's branch list manageable and focused on current work.
-- **Release and Milestone Tracking**: Tags are commonly used to mark release points, but they're also useful for marking any significant point in history, such as the end of a feature branch.
-
-Remember, tags are global to the repository and not tied to a specific branch, so even after the branch is deleted, the tag remains accessible as a reference to that snapshot of the code.
-
-## `checkout` vs. `switch`
-
-[good article](https://phoenixnap.com/kb/git-switch-vs-checkout).
-"Although both commands can switch branches, git switch is more straightforward and explicit in its purpose. The git switch command was specifically designed to switch branches and doesn't handle other operations like working with individual files.
-
-In contrast, git checkout has a broader range of functionalities, which can confuse new Git users. The command allows you to switch branches and copy files from any branch to the current one. Additionally, it lets you restore changes from a particular commit.
-
-The Git team now advises users to use git switch for branch operations and git restore for file restorations. However, both operations can be done using git checkout."
-
-## Git `--amend` and Divergence Issue
-
-## Key Points
-
-- **`--amend` Use**: Rewrites the last commit. If already pushed, causes divergence.
-- **Why Divergence Happens**: Remote sees amended (local) commit history as different because commit hashes change.
-- **Conflict Prevention**: Git stops fast-forward merges to prevent data loss.
-
-## Resolving Divergence
-
-1. **Backup Work**: Always backup before making changes that could lose data.
-2. **Fetch Latest**: `git fetch origin` to get the latest remote changes.
-3. **Rebase (Option 1)**:
-   - `git rebase origin/develop`
-   - Move local changes on top of remote changes.
-   - Resolve conflicts if any.
-4. **Merge (Option 2)**:
-   - `git merge origin/develop`
-   - Combines remote and local changes.
-   - May result in a merge commit.
-5. **Force Push**:
-   - `git push origin develop --force`
-   - Overwrites remote with local.
-   - Use with caution and communicate with the team.
-
-## Best Practices
-
-- **Amend Unpushed Commits Only**: Safe for local, not for pushed commits.
-- **Communicate**: Notify team when rewriting shared branch history.
-- **Feature Branches**: Work on features separately, merge after review.
-
-## Everyday Git Workflows
-
-### Create and Push a New Branch
-
-1. Check current status:  
-   `git status`
-2. Create and switch to a new branch:  
-   `git switch -c feature/my-feature`
-3. Stage changes:  
-   `git add .`
-4. Commit changes:  
-   `git commit -m "Add my feature"`
-5. Push branch to remote and set upstream:  
-   `git push -u origin feature/my-feature`
+A working reference for solo development, structured so the habits transfer to team work later. Sections marked **▸ Team habit** are things that cost almost nothing solo but are expected the moment someone else reads your repo.
 
 ---
 
-### Update a Branch with Latest Main
+## 1. The mental model
 
-1. Switch to main:  
-   `git switch main`
-2. Fetch latest changes:  
-   `git fetch`
-3. Pull updates:  
-   `git pull`
-4. Switch back to your feature branch:  
-   `git switch feature/my-feature`
-5. Merge main into your branch:  
-   `git merge main`  
-   _(or rebase for a cleaner history)_  
-   `git rebase main`
+Git stores **snapshots**, not changes. Every commit is a complete picture of the project at a moment in time, plus a pointer to the commit before it.
 
----
+A **branch** is just a movable label pointing at one of those commits. Making a branch costs nothing — it creates a name, not a copy of your files. This is why branching is cheap and why teams do it constantly.
 
-### Open a Pull Request (PR)
+`main` is a branch like any other. It's only special because everyone agrees it is.
 
-1. Push your branch (if not already pushed):  
-   `git push -u origin feature/my-feature`
-2. Go to your repository on GitHub/GitLab/Bitbucket.
-3. Select _Compare & Pull Request_ (GitHub) or _Merge Request_ (GitLab).
-4. Review and create PR/MR.
+```text
+A --- B --- C          ← main
+             \
+              D --- E  ← feature/name-cleaning
+```
+
+Commits D and E exist. `main` doesn't know about them until you merge or rebase.
 
 ---
 
-### Stash Changes Before Switching Branches
+## 2. Commits
 
-1. Stash current work:  
-   `git stash`
-2. Switch to another branch:  
-   `git switch main`
-3. Later, reapply stash:  
-   `git stash pop`
+### What makes a good commit
 
----
+One logical change. If the commit message needs the word "and," it's probably two commits.
 
-### Delete a Branch
+| Bad                                            | Better                                                |
+| ---------------------------------------------- | ----------------------------------------------------- |
+| `update`                                       | `Extract suffixes before splitting names`             |
+| `fixes`                                        | `Fix phone extension corruption from digit-stripping` |
+| `wip`                                          | `Add where_to_split correction column`                |
+| `changed a bunch of stuff and fixed the thing` | _(split into two commits)_                            |
 
-#### Local
+**Message format:** imperative mood, present tense — "Add X", not "Added X" or "Adds X". Reads as _what applying this commit does_. This is a near universal convention and following it signals familiarity.
 
-- Safe delete:  
-  `git branch -d feature/my-feature`
-- Force delete (unmerged):  
-  `git branch -D feature/my-feature`
+### How often to commit
 
-#### Remote
+Commit when something works. Not when everything works.
 
-- Delete remote branch:  
-  `git push origin --delete feature/my-feature`
+The test: **could I go back to this commit and have a functioning state?** If yes, commit. Half-finished refactors that don't run are exactly what branches are for (§3), not what commits are for.
 
----
+Practical rhythm for the kind of work you're doing:
 
-### Roll Back a Mistake
+- Finished cleaning phone numbers, `isna()` returns 0 → commit
+- Extracted a working function to `cleaning.py` → commit
+- Added a correction row to `where_to_split.csv` → commit
 
-#### Undo last commit but keep changes staged
+### Everyday commit cycle
 
-`git reset --soft HEAD~1`
+```sh
+git status                      # what's changed
+git diff                        # what exactly changed
+git add cleaning.py             # stage specific files
+git add .                       # or stage everything
+git diff --staged               # review what you're about to commit
+git commit -m "Extract phone cleaning into cleaning.py"
+git push
+```
 
-#### Undo last commit and unstage changes
+`git diff --staged` before every commit is a habit worth building. It catches the accidentally-committed API key, the debug print, the 8,000-line data file.
 
-`git reset --mixed HEAD~1`
-
-#### Undo last commit and discard changes
-
-`git reset --hard HEAD~1`
-
-#### Revert a commit safely
-
-`git revert <commit-hash>`
+▸ **Team habit:** on a team, your commits are read by other people during review. Small, well-titled commits make review possible; one giant commit makes it impossible.
 
 ---
 
-### Tag a Release
+## 3. Branches
 
-1. Create a tag:  
-   `git tag v1.0.0`
-2. Push the tag:  
-   `git push origin v1.0.0`
-3. Delete local tag:  
-   `git tag -d v1.0.0`
-4. Delete remote tag:  
-   `git push origin --delete v1.0.0`
+### The honest answer for solo work
+
+You don't need a branch for most of what you do. Linear work on `main` is fine and not a bad habit.
+
+Branch when you hit one of these **three specific signals**:
+
+| Signal                                                                            | Example from real work                                                              |
+| --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| **You want to change something structural while the current version still works** | Extracting notebook code into `.py` modules while the notebook still runs correctly |
+| **You're trying something you might throw away**                                  | Testing whether `rapidfuzz` beats a simple groupby, unsure which wins               |
+| **You need to context-switch mid-task**                                           | Half-finished refactor, and something urgent comes in                               |
+
+All three share a shape: _you need a working version to stay working while you break things somewhere else._
+
+### Branch mechanics
+
+```sh
+git switch -c feature/extract-modules    # create and switch to it
+# ... work, commit, work, commit ...
+git switch main                          # go back
+git merge feature/extract-modules        # bring the work in
+git branch -d feature/extract-modules    # clean up
+```
+
+`git switch` is the modern command for changing branches. `git checkout` also works and you'll see it everywhere, but it does too many unrelated things (switching branches, restoring files, checking out commits), which is why the Git team split it into `switch` and `restore`.
+
+### Naming
+
+```text
+feature/catalist-normalization
+fix/phone-extension-parsing
+refactor/extract-cleaning-module
+experiment/rapidfuzz-comparison
+```
+
+Prefix, slash, kebab-case description. Costs nothing solo, and it's the convention almost every team uses.
+
+▸ **Team habit:** teams often require branch names to reference a ticket — `feature/DATA-142-catalist-matching`. Adopt whatever the team uses.
 
 ---
 
-### Inspecting History
+## 4. Merge vs. rebase
 
-- View log as a simple list:  
-  `git log --oneline`
-- View all branches and graph:  
-  `git log --all --decorate --oneline --graph`
-- View changes in last commit:  
-  `git show`
-- View staged changes:  
-  `git diff --staged`
+This is the section worth understanding properly, because it's the most common Git interview question and the most common source of confusion.
+
+### The situation both commands solve
+
+You branched off `main`. While you worked, `main` moved forward.
+
+```text
+A --- B --- C --- F        ← main (someone else's work, or your own)
+             \
+              D --- E      ← your feature branch
+```
+
+Your branch is based on C, but `main` is now at F. You need to reconcile these. Two options.
+
+### Merge
+
+`git merge main` (from your feature branch) creates a **new commit** that has two parents — it ties the two histories together.
+
+```text
+A --- B --- C --- F --------- M   ← main after merge
+             \               /
+              D --- E ------/
+```
+
+- **Preserves history exactly as it happened.** D and E keep their original commit hashes and their original parent.
+- **Adds a merge commit** (M) that exists only to join the branches.
+- **Non-destructive.** Nothing is rewritten.
+- History becomes a graph with visible branch-and-join structure.
+
+### Rebase
+
+`git rebase main` (from your feature branch) **replays your commits on top of the new base**, as if you'd started from F all along.
+
+```text
+A --- B --- C --- F                    ← main
+                   \
+                    D' --- E'          ← your branch, rebased
+```
+
+- **Rewrites your commits.** D' and E' are _new commits_ with different hashes — same changes, different identity.
+- **No merge commit.** History stays linear.
+- **Destructive to history**, which is why the rule below exists.
+
+### The one rule that matters
+
+> **Never rebase commits that other people have pulled.**
+
+Because rebase creates new commits with new hashes, anyone who already has the old commits now has a diverged history that Git can't reconcile. This is what causes the "your branch and origin/x have diverged" mess.
+
+Practical version of the rule:
+
+- **Rebase your own unpushed work** — clean, safe, encouraged
+- **Merge anything shared** — or coordinate loudly before rewriting
+
+### Which to use
+
+| Situation                                                          | Use                                                  |
+| ------------------------------------------------------------------ | ---------------------------------------------------- |
+| Updating your feature branch with the latest `main`, work unpushed | **rebase** — keeps history clean                     |
+| Bringing a finished feature into `main`                            | **merge** — preserves the fact that it was a feature |
+| Anything already pushed and shared                                 | **merge** — never rewrite shared history             |
+| You're unsure                                                      | **merge** — it's the non-destructive option          |
+
+Solo, unpushed work: rebase freely, it produces nicer history. Everything else: merge.
+
+### Resolving conflicts
+
+Both commands can produce conflicts when the same lines changed in both places. Git marks them in the file:
+
+```text
+<<<<<<< HEAD
+df['phone'] = df['phone'].str.strip()
+=======
+df['phone'] = df['phone'].str.strip().str.replace('+', '')
+>>>>>>> feature/phone-cleaning
+```
+
+Edit the file to what it should actually be, delete the marker lines, then:
+
+```sh
+git add <file>
+git commit          # if merging
+git rebase --continue   # if rebasing
+```
+
+Escape hatch if it goes badly:
+
+```sh
+git merge --abort
+git rebase --abort
+```
+
+Both return you to the state before you started. Use them freely — an aborted merge costs nothing.
+
+---
+
+## 5. Pull requests
+
+### What a PR actually is
+
+A request to merge one branch into another, with a discussion attached. The branch already exists and the commits are already pushed — the PR is a _wrapper_ around that merge that adds:
+
+- A place to describe **why** the change exists
+- A diff view others can read and comment on line by line
+- A gate — automated tests and reviews run before the merge happens
+
+### Why bother solo
+
+The review conversation is absent, but three things still work:
+
+1. **The diff view is a genuine self-review tool.** Reading your own changes
+   in GitHub's interface, away from your editor, catches things you missed. Debug prints, commented-out code, an accidentally staged data file.
+2. **The description forces articulation.** Writing "why" in a PR body is
+   practice for the thing you'll do constantly on a team.
+3. **You build the muscle memory.** In an interview, "walk me through your
+   workflow" is much easier to answer when you've actually done it.
+
+### When to open one solo
+
+Not for every commit — that's overhead with no return. Open a PR when the change is **big enough that you'd want a second look**:
+
+- A refactor that touches multiple files
+- A new stage of the pipeline
+- Anything where you'd struggle to explain the change from memory a month later
+
+### The flow
+
+```sh
+git switch -c feature/extract-modules
+# ... work, commit ...
+git push -u origin feature/extract-modules
+```
+
+Then on GitHub: **Compare & pull request** → write a description → **Create pull request** → read your own diff → **Merge**.
+
+`-u` sets the upstream so future pushes on this branch are just `git push`.
+
+### Writing the description
+
+```markdown
+## What
+
+Extracts name-splitting and phone-cleaning logic from the notebook into
+`cleaning.py`.
+
+## Why
+
+The notebook cell was ~80 lines with three near-identical blocks. Variable
+name collisions between blocks caused two bugs.
+
+## Notes
+
+Notebook now imports from `cleaning.py`. Requires `%autoreload 2` to pick up
+edits without a kernel restart.
+```
+
+▸ **Team habit:** on a team the "why" section is the important one. Reviewers can read what changed; they can't read your reasoning.
+
+---
+
+## 6. Undoing things
+
+Ordered by how destructive they are.
+
+### Undo the last commit, keep changes staged
+
+```sh
+git reset --soft HEAD~1
+```
+
+Commit disappears, files unchanged and still staged. Use when you committed too early or want to rewrite the message.
+
+### Undo the last commit, unstage changes
+
+```sh
+git reset --mixed HEAD~1
+```
+
+Commit disappears, changes remain in working directory but unstaged.
+
+### Undo the last commit and discard the work
+
+```sh
+git reset --hard HEAD~1
+```
+
+**Destructive.** Changes are gone. Only when you're certain.
+
+### Amend the last commit
+
+```sh
+git commit --amend -m "Better message"
+```
+
+Rewrites the last commit — new hash, same as rebase. **Safe only if unpushed.** If already pushed, you've diverged from remote and need §4's rules.
+
+### Undo a commit that's already pushed
+
+```sh
+git revert <commit-hash>
+```
+
+Creates a _new_ commit that undoes the old one. Nothing is rewritten, so it's safe on shared history. This is the correct tool for "I pushed something bad."
+
+### Recover from almost anything
+
+```sh
+git reflog
+```
+
+A log of everywhere `HEAD` has been, including commits you "lost" via reset. Find the hash, `git reset --hard <hash>`, and you're back.
+
+Worth knowing this exists before you need it. Git very rarely loses committed work permanently.
+
+---
+
+## 7. Stashing
+
+Set aside uncommitted work temporarily.
+
+```sh
+git stash              # shelve current changes
+git switch main
+# ... do something else ...
+git switch feature/my-work
+git stash pop          # bring the changes back
+```
+
+`git stash list` shows what's shelved. `git stash pop` applies and removes the most recent; `git stash apply` applies but keeps it.
+
+Useful when you need to switch context mid-task and aren't at a committable point. Don't let stashes accumulate — they're easy to forget and have no descriptions by default.
+
+---
+
+## 8. Inspecting history
+
+```sh
+git log --oneline                              # compact list
+git log --all --decorate --oneline --graph     # visual branch structure
+git show                                       # what the last commit changed
+git show <commit-hash>                         # what any commit changed
+git diff                                       # unstaged changes
+git diff --staged                              # staged changes
+git blame <file>                               # who changed each line, when
+```
+
+The `--graph` version is the one to run when branches confuse you. It draws the actual structure.
+
+---
+
+## 9. Tags
+
+A tag is a permanent name for a specific commit. Unlike branches, tags don't move.
+
+Mostly used for releases (`v1.0.0`), but also useful for marking any state worth returning to.
+
+```sh
+git tag -a v1.0.0 -m "First complete pipeline run"
+git push origin v1.0.0
+```
+
+`-a` creates an _annotated_ tag with author, date, and message. Prefer it over a lightweight tag (`git tag v1.0.0`) — the metadata is worth having.
+
+Tags aren't pushed automatically. `git push` alone won't send them.
+
+### Tagging before deleting a branch
+
+If a branch has work worth referencing but you don't want to keep the branch:
+
+```sh
+git switch branch-name
+git tag -a archive/experiment-rapidfuzz -m "Final state before abandoning"
+git push origin archive/experiment-rapidfuzz
+git branch -d branch-name
+```
+
+The tag survives the branch deletion and keeps those commits reachable.
+
+Niche, but worth knowing. Most solo work never needs it.
+
+---
+
+## 10. `.gitignore`
+
+Never commit:
+
+```sh
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+*.env
+credentials.json
+```
+
+**Data files are a judgment call.** Small inputs that the code depends on (a correction table, a lookup CSV) belong in the repo — they're part of the project. Large raw exports don't.
+
+Anything with real names, phone numbers, or addresses should not be in a repo that might become public. Consider a `data/` directory that's gitignored entirely, with a `data/README.md` explaining what belongs there.
+
+---
+
+## 11. Practice track — building the habits now
+
+The goal is that none of this is theoretical when someone asks about it.
+
+**Already doing:**
+
+- [x] Commit regularly to `main`
+- [x] Meaningful commit messages
+
+**Next — low cost, real value:**
+
+- [ ] Run `git diff --staged` before every commit
+- [ ] Use imperative mood consistently ("Add", not "Added")
+- [ ] Create one branch for the next structural change (extracting `.py` modules is the natural candidate)
+- [ ] Merge that branch back into `main` and delete it
+
+**Then — the team-readiness pieces:**
+
+- [ ] Open one PR against yourself for a change big enough to be worth reviewing. Read your own diff in GitHub's interface before merging.
+- [ ] Deliberately create a merge conflict in a scratch repo and resolve it. Two branches, same line of the same file, changed differently. Doing this once removes most of the fear.
+- [ ] Rebase an unpushed feature branch onto an updated `main`, and run `git log --graph` before and after to see what changed.
+
+**Later, once modules exist:**
+
+- [ ] Tag the first complete end-to-end pipeline run
+
+---
+
+## 12. Applied: `catalist-ab-match`
+
+What the above looks like in the current project.
+
+**Now (linear work on `main`):**
+
+```sh
+git add cleaning.py
+git diff --staged
+git commit -m "Add supervisor name extraction from supervisory_organization"
+git push
+```
+
+**The next branch-worthy change** — extracting notebook code into `.py` modules, since the notebook currently works and the refactor could break it:
+
+```sh
+git switch -c refactor/extract-cleaning-module
+# move name-splitting and phone-cleaning into cleaning.py
+# update notebook to import from it
+# confirm the pipeline still runs
+git add .
+git commit -m "Extract name and phone cleaning into cleaning.py"
+git push -u origin refactor/extract-cleaning-module
+```
+
+Then open a PR, read the diff, merge, and delete the branch. That single cycle covers branching, PRs, and merging in one pass on a change you were going to make anyway.
+
+**Branch candidates later in this project:**
+
+- `feature/phone-agreement-matching` — Phase 3
+- `experiment/confidence-threshold` — trying threshold values, may discard
+- `feature/action-builder-upload` — Phase 4
+
+**Tag candidate:** the first successful end-to-end run producing an Action Builder-ready output.

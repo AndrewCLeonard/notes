@@ -13,3 +13,9 @@ df.loc[condition_1, 'column'] = value # higher priority, overwrites where both m
 ```
 
 ## Key rule: `loc[]` is surgical — only touches matching rows
+
+`loc[]` always has this structure:
+
+```python
+df.loc[ROW CONDITION, COLUMN TO WRITE TO] = VALUE
+```

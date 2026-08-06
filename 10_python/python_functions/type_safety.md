@@ -81,7 +81,7 @@ mypy .  # Check all Python files in directory
 2. Settings → Python › Linting: Mypy Enabled → ✓
 3. Type errors show as you type
 
-**Difference: VS Code Pylance vs mypy**
+#### Difference: VS Code Pylance vs mypy
 
 - **Pylance** (VS Code built-in): Fast, real-time, good for learning
 - **mypy**: More thorough, industry standard, catches edge cases
